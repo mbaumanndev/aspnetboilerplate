@@ -32,42 +32,42 @@ namespace Abp.Runtime.Caching
 
         public virtual TValue Get(TKey key, Func<TKey, TValue> factory)
         {
-            TValue item = default(TValue);
+            TValue value = default;
 
             try
             {
-                item = GetOrDefault(key);
+                value = GetOrDefault(key);
             }
             catch (Exception ex)
             {
                 Logger.Error(ex.ToString(), ex);
             }
 
-            if (item == null)
+            if (EqualityComparer<TValue>.Default.Equals(value, default))
             {
                 lock (SyncObj)
                 {
                     try
                     {
-                        item = GetOrDefault(key);
+                        value = GetOrDefault(key);
                     }
                     catch (Exception ex)
                     {
                         Logger.Error(ex.ToString(), ex);
                     }
 
-                    if (item == null)
+                    if (EqualityComparer<TValue>.Default.Equals(value, default))
                     {
-                        item = factory(key);
+                        value = factory(key);
 
-                        if (item == null)
+                        if (EqualityComparer<TValue>.Default.Equals(value, default))
                         {
-                            return default(TValue);
+                            return default;
                         }
 
                         try
                         {
-                            Set(key, item);
+                            Set(key, value);
                         }
                         catch (Exception ex)
                         {
@@ -77,7 +77,7 @@ namespace Abp.Runtime.Caching
                 }
             }
 
-            return item;
+            return value;
         }
 
         public virtual TValue[] Get(TKey[] keys, Func<TKey, TValue> factory)
@@ -115,13 +115,13 @@ namespace Abp.Runtime.Caching
                     for (var i = 0; i < items.Length; i++)
                     {
                         TKey key = keys[i];
-                        TValue value = default(TValue);
-                        if (items[i] == null)
+                        TValue value = default;
+                        if (EqualityComparer<TValue>.Default.Equals(items[i], default))
                         {
                             items[i] = value = factory(key);
                         }
 
-                        if (value != null)
+                        if (!EqualityComparer<TValue>.Default.Equals(value, default))
                         {
                             fetched.Add(new KeyValuePair<TKey, TValue>(key, value));
                         }
@@ -146,42 +146,42 @@ namespace Abp.Runtime.Caching
 
         public virtual async Task<TValue> GetAsync(TKey key, Func<TKey, Task<TValue>> factory)
         {
-            TValue item = default(TValue);
+            TValue value = default;
 
             try
             {
-                item = await GetOrDefaultAsync(key);
+                value = await GetOrDefaultAsync(key);
             }
             catch (Exception ex)
             {
                 Logger.Error(ex.ToString(), ex);
             }
 
-            if (item == null)
+            if (EqualityComparer<TValue>.Default.Equals(value, default))
             {
                 using (await AsyncLock.LockAsync())
                 {
                     try
                     {
-                        item = await GetOrDefaultAsync(key);
+                        value = await GetOrDefaultAsync(key);
                     }
                     catch (Exception ex)
                     {
                         Logger.Error(ex.ToString(), ex);
                     }
 
-                    if (item == null)
+                    if (EqualityComparer<TValue>.Default.Equals(value, default))
                     {
-                        item = await factory(key);
+                        value = await factory(key);
 
-                        if (item == null)
+                        if (EqualityComparer<TValue>.Default.Equals(value, default))
                         {
-                            return default(TValue);
+                            return default;
                         }
 
                         try
                         {
-                            await SetAsync(key, item);
+                            await SetAsync(key, value);
                         }
                         catch (Exception ex)
                         {
@@ -191,7 +191,7 @@ namespace Abp.Runtime.Caching
                 }
             }
 
-            return item;
+            return value;
         }
 
         public virtual async Task<TValue[]> GetAsync(TKey[] keys, Func<TKey, Task<TValue>> factory)
@@ -229,13 +229,13 @@ namespace Abp.Runtime.Caching
                     for (var i = 0; i < items.Length; i++)
                     {
                         TKey key = keys[i];
-                        TValue value = default(TValue);
-                        if (items[i] == null)
+                        TValue value = default;
+                        if (EqualityComparer<TValue>.Default.Equals(items[i], default))
                         {
                             items[i] = value = await factory(key);
                         }
 
-                        if (value != null)
+                        if (!EqualityComparer<TValue>.Default.Equals(value, default))
                         {
                             fetched.Add(new KeyValuePair<TKey, TValue>(key, value));
                         }
