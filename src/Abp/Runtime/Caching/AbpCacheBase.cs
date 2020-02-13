@@ -114,14 +114,16 @@ namespace Abp.Runtime.Caching
                     var fetched = new List<KeyValuePair<TKey, TValue>>();
                     for (var i = 0; i < items.Length; i++)
                     {
+                        TKey key = keys[i];
+                        TValue value = default(TValue);
                         if (items[i] == null)
                         {
-                            var key = keys[i];
-                            items[i] = factory(key);
-                            if (items[i] != null)
-                            {
-                                fetched.Add(new KeyValuePair<TKey, TValue>(key, items[i]));
-                            }
+                            items[i] = value = factory(key);
+                        }
+
+                        if (value != null)
+                        {
+                            fetched.Add(new KeyValuePair<TKey, TValue>(key, value));
                         }
                     }
 
@@ -226,14 +228,16 @@ namespace Abp.Runtime.Caching
                     var fetched = new List<KeyValuePair<TKey, TValue>>();
                     for (var i = 0; i < items.Length; i++)
                     {
+                        TKey key = keys[i];
+                        TValue value = default(TValue);
                         if (items[i] == null)
                         {
-                            var key = keys[i];
-                            items[i] = await factory(key);
-                            if (items[i] != null)
-                            {
-                                fetched.Add(new KeyValuePair<TKey, TValue>(key, items[i]));
-                            }
+                            items[i] = value = await factory(key);
+                        }
+
+                        if (value != null)
+                        {
+                            fetched.Add(new KeyValuePair<TKey, TValue>(key, value));
                         }
                     }
 
