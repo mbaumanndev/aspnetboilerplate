@@ -29,17 +29,31 @@ namespace Abp.Tests.Runtime.Caching
         [Fact]
         public void Multi_Keys_Get_Test()
         {
-            //var cacheValues = _memoryCache.GetOrDefault(new[] { "A", "B" });
-            //cacheValues.ShouldNotBeNull();
-            //cacheValues.Length.ShouldBe(2);
-            //cacheValues[0].ShouldBeNull();
-            //cacheValues[1].ShouldBeNull();
+            var cache1 = new MyCache1("cache 1");
+            var cacheValues1 = cache1.GetOrDefault(new[] { "A", "B" });
+            cacheValues1.ShouldNotBeNull();
+            cacheValues1.Length.ShouldBe(2);
+            cacheValues1[0].ShouldBe(0);
+            cacheValues1[1].ShouldBe(0);
 
-            //cacheValues = _memoryCache.Get(new[] { "A", "B" }, (key) => "test " + key);
-            //cacheValues.ShouldNotBeNull();
-            //cacheValues.Length.ShouldBe(2);
-            //cacheValues[0].ShouldBe("test A");
-            //cacheValues[1].ShouldBe("test B");
+            cacheValues1 = cache1.Get(new[] { "A", "B" }, (key) => 11);
+            cacheValues1.ShouldNotBeNull();
+            cacheValues1.Length.ShouldBe(2);
+            cacheValues1[0].ShouldBe(11);
+            cacheValues1[1].ShouldBe(11);
+
+            var cache2 = new MyCache2("cache 2");
+            var cacheValues2 = cache2.GetOrDefault(new[] { "C", "D" });
+            cacheValues2.ShouldNotBeNull();
+            cacheValues2.Length.ShouldBe(2);
+            cacheValues2[0].ShouldBeNull();
+            cacheValues2[1].ShouldBeNull();
+
+            cacheValues2 = cache2.Get(new[] { "C", "D" }, (key) => 22);
+            cacheValues2.ShouldNotBeNull();
+            cacheValues2.Length.ShouldBe(2);
+            cacheValues2[0].ShouldBe(22);
+            cacheValues2[1].ShouldBe(22);
         }
 
         class MyCache1 : AbpCacheBase<string, int>
