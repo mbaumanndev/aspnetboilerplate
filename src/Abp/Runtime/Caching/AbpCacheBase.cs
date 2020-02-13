@@ -60,7 +60,7 @@ namespace Abp.Runtime.Caching
                     {
                         value = factory(key);
 
-                        if (EqualityComparer<TValue>.Default.Equals(value, default))
+                        if (value == null)
                         {
                             return default;
                         }
@@ -121,7 +121,7 @@ namespace Abp.Runtime.Caching
                             values[i] = value = factory(key);
                         }
 
-                        if (!EqualityComparer<TValue>.Default.Equals(value, default))
+                        if (value != null)
                         {
                             fetched.Add(new KeyValuePair<TKey, TValue>(key, value));
                         }
@@ -174,7 +174,7 @@ namespace Abp.Runtime.Caching
                     {
                         value = await factory(key);
 
-                        if (EqualityComparer<TValue>.Default.Equals(value, default))
+                        if (value == null)
                         {
                             return default;
                         }
@@ -235,7 +235,7 @@ namespace Abp.Runtime.Caching
                             values[i] = value = await factory(key);
                         }
 
-                        if (!EqualityComparer<TValue>.Default.Equals(value, default))
+                        if (value != null)
                         {
                             fetched.Add(new KeyValuePair<TKey, TValue>(key, value));
                         }
