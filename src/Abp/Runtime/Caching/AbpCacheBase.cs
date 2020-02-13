@@ -98,7 +98,7 @@ namespace Abp.Runtime.Caching
                 values = new TValue[keys.Length];
             }
 
-            if (values.Any(i => i == null))
+            if (values.Any(v => EqualityComparer<TValue>.Default.Equals(v, default)))
             {
                 lock (SyncObj)
                 {
@@ -212,7 +212,7 @@ namespace Abp.Runtime.Caching
                 values = new TValue[keys.Length];
             }
 
-            if (values.Any(i => i == null))
+            if (values.Any(v => EqualityComparer<TValue>.Default.Equals(v, default)))
             {
                 using (await AsyncLock.LockAsync())
                 {
